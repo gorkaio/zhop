@@ -5,6 +5,7 @@ defmodule Zhop.Catalog.Application do
 
   def start(_type, _args) do
     children = [
+      Zhop.Catalog.Repository
     ]
 
     opts = [strategy: :one_for_one, name: Zhop.Catalog.Supervisor]

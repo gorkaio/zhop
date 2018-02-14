@@ -24,7 +24,7 @@ defmodule Zhop.Catalog.MixProject do
 
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :gproc],
       mod: {Zhop.Catalog.Application, []}
     ]
   end
@@ -32,9 +32,12 @@ defmodule Zhop.Catalog.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:gproc, "~> 0.6.1"},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:credo, "~> 0.9.0-rc1", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+      {:mix_test_watch, "~> 0.5", only: :dev, runtime: false},
+      { :quixir, "~> 0.9", only: :test },
       {:money, "~> 1.2"}
     ]
   end
