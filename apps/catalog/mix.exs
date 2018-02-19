@@ -12,6 +12,7 @@ defmodule Zhop.Catalog.MixProject do
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      elixirc_paths: elixirc_paths(Mix.env()),
 
       # Docs
       name: "Zhop.Catalog",
@@ -37,8 +38,12 @@ defmodule Zhop.Catalog.MixProject do
       {:credo, "~> 0.9.0-rc1", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:mix_test_watch, "~> 0.5", only: :dev, runtime: false},
-      { :quixir, "~> 0.9", only: :test },
+      {:quixir, "~> 0.9", only: :test},
+      {:mox, "~> 0.3", only: :test},
       {:money, "~> 1.2"}
     ]
   end
+
+  def elixirc_paths(:test), do: ["test/support", "lib"]
+  def elixirc_paths(_), do: ["lib"]
 end

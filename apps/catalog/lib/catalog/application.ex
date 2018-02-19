@@ -1,11 +1,13 @@
 defmodule Zhop.Catalog.Application do
   @moduledoc false
 
+  @repository Application.get_env(:catalog, :repository)
+
   use Application
 
   def start(_type, _args) do
     children = [
-      Zhop.Catalog.Repository
+      @repository
     ]
 
     opts = [strategy: :one_for_one, name: Zhop.Catalog.Supervisor]
