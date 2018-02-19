@@ -1,21 +1,5 @@
 # Zhop.Catalog
 
-**TODO: Add description**
+Catalog application for the Zhop project.
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `catalog` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:catalog, "~> 0.1.0"}
-  ]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/catalog](https://hexdocs.pm/catalog).
-
+Catalog manages the available products and allows to retrieve data about them. 
