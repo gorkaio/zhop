@@ -2,7 +2,6 @@ defmodule Zhop.CatalogTest do
   use ExUnit.Case, async: false
   import Mox
   doctest Zhop.Catalog
-  alias Zhop.Catalog.Item
 
   # @todo Setting a mock for a supervised process under the same app tree
   #   is harder than expected. Look into this and try to mock the repo instead
