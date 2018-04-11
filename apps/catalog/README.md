@@ -2,4 +2,4 @@
 
 Catalog application for the Zhop project.
 
-Catalog manages the available products and allows to retrieve data about them. 
+Catalog manages the available products and discounts and allows to retrieve data about them. 

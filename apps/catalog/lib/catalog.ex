@@ -2,11 +2,17 @@ defmodule Zhop.Catalog do
   @moduledoc """
   Catalog module of the Zhop project.
 
-  Allows retrieving information of existing products
+  Manages information about products.
+
+  This should be the only module used by other applications, and defines its contract via behaviour.
   """
   alias Zhop.Catalog.{Item, Repository}
 
-  @repository Application.get_env(:catalog, :repository)
+  # This should be the only exposed module for this app.
+  # Make it a contract for other modules by defining its behaviour.
+  @callback name(id :: String.t()) :: {:ok, String.t()} | {:error, reason :: term}
+  @callback price(id :: String.t()) :: {:ok, Money.t()} | {:error, reason :: term}
+  @callback type(id :: String.t()) :: {:ok, Item.types()} | {:error, reason :: term}
 
   @doc """
   Gets name for a given item
@@ -14,12 +20,11 @@ defmodule Zhop.Catalog do
   ## Parameters
 
     - id: ID of the searched item
- 
+
   """
   @spec name(id :: String.t()) :: {:ok, String.t()} | {:error, reason :: term}
   def name(id) do
-    with {:ok, item} <- @repository.find(id)
-    do
+    with {:ok, item} <- Repository.find(id) do
       {:ok, item.name}
     else
       error -> error
@@ -34,10 +39,9 @@ defmodule Zhop.Catalog do
     - id: ID of the searched item
 
   """
-  @spec price(id :: String.t()) :: {:ok, String.t()} | {:error, reason :: term}
+  @spec price(id :: String.t()) :: {:ok, Money.t()} | {:error, reason :: term}
   def price(id) do
-    with {:ok, item} <- @repository.find(id)
-    do
+    with {:ok, item} <- Repository.find(id) do
       {:ok, item.price}
     else
       error -> error
@@ -54,8 +58,7 @@ defmodule Zhop.Catalog do
   """
   @spec type(id :: String.t()) :: {:ok, Item.types()} | {:error, reason :: term}
   def type(id) do
-    with {:ok, item} <- @repository.find(id)
-    do
+    with {:ok, item} <- Repository.find(id) do
       {:ok, item.type}
     else
       error -> error

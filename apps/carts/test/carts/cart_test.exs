@@ -10,7 +10,7 @@ defmodule Zhop.Carts.CartTest do
     {:ok, cart} = Cart.add(cart, "ITEM")
     assert Cart.has(cart, "ITEM") == true
     {:ok, cart} = Cart.remove(cart, "ITEM")
-    assert Cart.has(cart, "ITEM") == false  
+    assert Cart.has(cart, "ITEM") == false
   end
 
   test "counts items in cart" do
@@ -33,7 +33,7 @@ defmodule Zhop.Carts.CartTest do
     {:ok, cart} = Cart.add(cart, "ITEM", 13)
     assert Cart.count(cart, "ITEM") == 13
   end
-  
+
   test "decreases item units from cart when removing less than existing" do
     {:ok, cart} = Cart.new(@uuid)
     assert Cart.has(cart, "ITEM") == false

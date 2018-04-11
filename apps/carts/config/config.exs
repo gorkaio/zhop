@@ -1,6 +1,8 @@
 use Mix.Config
 
-config :catalog, repository: Zhop.Catalog.Repository.Memory
+config :carts,
+  repository: Zhop.Carts.Repository.Memory,
+  catalog: Zhop.Catalog
 
 config :money,
   default_currency: :EUR,

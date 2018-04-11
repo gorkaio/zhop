@@ -4,7 +4,7 @@ defmodule Zhop.Catalog.Repository.Fixtures do
   """
   @behaviour Zhop.Catalog.Repository
   alias Zhop.Catalog.Item
-  
+
   use GenServer
 
   @doc false
@@ -13,7 +13,7 @@ defmodule Zhop.Catalog.Repository.Fixtures do
   end
 
   @doc false
-  def via_tuple() do
+  def via_tuple do
     {:via, :gproc, {:n, :l, :catalog_repository}}
   end
 
@@ -22,52 +22,16 @@ defmodule Zhop.Catalog.Repository.Fixtures do
     {:ok, Map.new(initial_data(), fn {:ok, item} -> {item.id, item} end)}
   end
 
-  defp initial_data() do
+  defp initial_data do
     [
       Item.new("TEST", "TEST PRODUCT", :product, Money.new(3_20))
     ]
   end
 
-  # API
-
-  @doc """
-  Finds an item by ID
-
-  ## Parameters
-
-    - id: ID of the searched item
-
-  ## Examples
-
-      iex> {:ok, item} = Zhop.Catalog.Item.new("ITEM", "My item", :product, Money.new(12_00))
-      ...> Zhop.Catalog.Repository.AlternativeRepository.save(item)
-      ...> Zhop.Catalog.Repository.AlternativeRepository.find("ITEM")
-      {:ok, %Zhop.Catalog.Item{id: "ITEM", name: "My item", type: :product, price: Money.new(12_00)}}
-
-      iex> Zhop.Catalog.Repository.AlternativeRepository.find("UNEXISTING_ITEM")
-      {:error, :not_found}
-
-  """
-  @spec find(id :: String.t()) :: {:ok, Item.t()} | {:error, :item_not_found}
   def find(id) do
-    GenServer.call(via_tuple(), {:find, id})  
+    GenServer.call(via_tuple(), {:find, id})
   end
 
-  @doc """
-  Saves an item into the repository
-
-  ## Parameters
-
-    - item: Zhop.Catalog.Item to save
-
-  ## Examples
-
-      iex> {:ok, item} = Zhop.Catalog.Item.new("ITEM", "My item", :product, Money.new(12_00))
-      ...> Zhop.Catalog.Repository.AlternativeRepository.save(item)
-      :ok
-
-  """
-  @spec save(item :: Item.t()) :: :ok
   def save(%Item{} = item) do
     GenServer.call(via_tuple(), {:save, item})
   end

@@ -21,6 +21,7 @@ defmodule Zhop.Carts.Cart do
       {:ok, %Zhop.Carts.Cart{id: "abcd", contents: %{}}}
 
   """
+  @spec new(id :: String.t()) :: {:ok, Cart.t()} | {:error, reason :: term}
   def new(id) when is_binary(id) do
     {:ok, %Cart{id: id, contents: Map.new()}}
   end
@@ -45,18 +46,21 @@ defmodule Zhop.Carts.Cart do
       {:ok, %Zhop.Carts.Cart{id: "abcd", contents: %{"ITEM" => 5}}}
 
   """
+  @spec add(cart :: Cart.t(), id :: String.t(), quantity :: integer) ::
+          {:ok, Cart.t()} | {:error, reason :: term}
   def add(cart, id, quantity \\ 1)
+
   def add(cart = %Cart{}, id, quantity) do
     with {:ok, id} <- validate_item_id(id),
-         {:ok, quantity} <- validate_quantity(quantity)
-    do
+         {:ok, quantity} <- validate_quantity(quantity) do
       {:ok, %Cart{cart | contents: Map.update(cart.contents, id, quantity, &(&1 + quantity))}}
     else
       error -> error
     end
   end
+
   def add(_, _, _), do: {:error, :invalid_argument}
-  
+
   @doc """
   Removes items from cart
 
@@ -76,28 +80,37 @@ defmodule Zhop.Carts.Cart do
       ...> {:ok, cart} = Zhop.Carts.Cart.add(cart, "ITEM", 5)
       ...> Zhop.Carts.Cart.remove(cart, "ITEM", 2)
       {:ok, %Zhop.Carts.Cart{id: "abcd", contents: %{"ITEM" => 3}}}
-      
+
       iex> {:ok, cart} = Zhop.Carts.Cart.new("abcd")
       ...> {:ok, cart} = Zhop.Carts.Cart.add(cart, "ITEM", 5)
       ...> Zhop.Carts.Cart.remove(cart, "ITEM", 21)
       {:ok, %Zhop.Carts.Cart{id: "abcd", contents: %{}}}
 
   """
+  @spec remove(cart :: Cart.t(), id :: String.t(), quantity :: integer) ::
+          {:ok, Cart.t()} | {:error, reason :: term}
   def remove(cart, id, quantity \\ 1)
+
   def remove(cart = %Cart{}, id, quantity) do
     with {:ok, id} <- validate_item_id(id),
-         {:ok, quantity} <- validate_quantity(quantity)
-    do
+         {:ok, quantity} <- validate_quantity(quantity) do
       current_quantity = Map.get(cart.contents, id)
+
       cond do
-        current_quantity == nil -> {:ok, cart}
-        current_quantity <= quantity -> {:ok, %Cart{ cart | contents: Map.delete(cart.contents, id)}}
-        true -> {:ok, %Cart{cart | contents: Map.put(cart.contents, id, current_quantity - quantity)}}
+        current_quantity == nil ->
+          {:ok, cart}
+
+        current_quantity <= quantity ->
+          {:ok, %Cart{cart | contents: Map.delete(cart.contents, id)}}
+
+        true ->
+          {:ok, %Cart{cart | contents: Map.put(cart.contents, id, current_quantity - quantity)}}
       end
     else
       error -> error
     end
   end
+
   def remove(_, _, _, _), do: {:error, :invalid_argument}
 
   @doc """
@@ -118,8 +131,9 @@ defmodule Zhop.Carts.Cart do
       ...> {:ok, cart} = Zhop.Carts.Cart.add(cart, "ITEM", 5)
       ...> Zhop.Carts.Cart.count(cart, "ITEM")
       5
-      
+
   """
+  @spec count(cart :: Cart.t(), id :: String.t()) :: integer
   def count(cart = %Cart{}, id) do
     Map.get(cart.contents, id, 0)
   end
@@ -142,22 +156,27 @@ defmodule Zhop.Carts.Cart do
       ...> {:ok, cart} = Zhop.Carts.Cart.add(cart, "ITEM", 5)
       ...> Zhop.Carts.Cart.has(cart, "ITEM")
       true
-      
+
   """
+  @spec has(cart :: Cart.t(), id :: String.t()) :: boolean
   def has(cart = %Cart{}, id) do
     Map.get(cart.contents, id, 0) !== 0
   end
 
   defp validate_item_id(item_id) when is_binary(item_id) do
     clean_item_id = String.trim(item_id)
+
     if String.length(clean_item_id) > 0 do
       {:ok, clean_item_id}
     else
       {:error, :invalid_item_id}
     end
   end
+
   defp validate_item_id(_), do: {:error, :invalid_item_id}
 
-  defp validate_quantity(quantity) when is_integer(quantity) and quantity >= 0, do: {:ok, quantity}
+  defp validate_quantity(quantity) when is_integer(quantity) and quantity >= 0,
+    do: {:ok, quantity}
+
   defp validate_quantity(_), do: {:error, :invalid_quantity}
 end

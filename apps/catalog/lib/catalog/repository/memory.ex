@@ -1,10 +1,10 @@
-defmodule Zhop.Catalog.Repository.AlternativeRepository do
+defmodule Zhop.Catalog.Repository.Memory do
   @moduledoc """
-  Catalog alterntive in memory repository implementation
+  Catalog in memory repository implementation
   """
   @behaviour Zhop.Catalog.Repository
   alias Zhop.Catalog.Item
-  
+
   use GenServer
 
   @doc false
@@ -13,7 +13,7 @@ defmodule Zhop.Catalog.Repository.AlternativeRepository do
   end
 
   @doc false
-  def via_tuple() do
+  def via_tuple do
     {:via, :gproc, {:n, :l, :catalog_repository}}
   end
 
@@ -22,9 +22,11 @@ defmodule Zhop.Catalog.Repository.AlternativeRepository do
     {:ok, Map.new(initial_data(), fn {:ok, item} -> {item.id, item} end)}
   end
 
-  defp initial_data() do
+  defp initial_data do
     [
-      Item.new("TEST", "TEST PRODUCT", :product, Money.new(3_20))
+      Item.new("VOUCHER", "Voucher", :product, Money.new(12_00)),
+      Item.new("T-SHIRT", "Awesome T-Shirt", :product, Money.new(22_34)),
+      Item.new("FTW-MUG", "4DW Coffee Mug", :product, Money.new(7_10))
     ]
   end
 
@@ -40,17 +42,17 @@ defmodule Zhop.Catalog.Repository.AlternativeRepository do
   ## Examples
 
       iex> {:ok, item} = Zhop.Catalog.Item.new("ITEM", "My item", :product, Money.new(12_00))
-      ...> Zhop.Catalog.Repository.AlternativeRepository.save(item)
-      ...> Zhop.Catalog.Repository.AlternativeRepository.find("ITEM")
+      ...> Zhop.Catalog.Repository.Memory.save(item)
+      ...> Zhop.Catalog.Repository.Memory.find("ITEM")
       {:ok, %Zhop.Catalog.Item{id: "ITEM", name: "My item", type: :product, price: Money.new(12_00)}}
 
-      iex> Zhop.Catalog.Repository.AlternativeRepository.find("UNEXISTING_ITEM")
+      iex> Zhop.Catalog.Repository.Memory.find("UNEXISTING_ITEM")
       {:error, :not_found}
 
   """
   @spec find(id :: String.t()) :: {:ok, Item.t()} | {:error, :not_found}
   def find(id) do
-    GenServer.call(via_tuple(), {:find, id})  
+    GenServer.call(via_tuple(), {:find, id})
   end
 
   @doc """
@@ -63,7 +65,7 @@ defmodule Zhop.Catalog.Repository.AlternativeRepository do
   ## Examples
 
       iex> {:ok, item} = Zhop.Catalog.Item.new("ITEM", "My item", :product, Money.new(12_00))
-      ...> Zhop.Catalog.Repository.AlternativeRepository.save(item)
+      ...> Zhop.Catalog.Repository.Memory.save(item)
       :ok
 
   """

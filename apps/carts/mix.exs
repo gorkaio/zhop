@@ -1,9 +1,9 @@
-defmodule Zhop.Cart.MixProject do
+defmodule Zhop.Carts.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :cart,
+      app: :carts,
       version: "0.1.0",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
@@ -12,11 +12,12 @@ defmodule Zhop.Cart.MixProject do
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      elixirc_paths: elixirc_paths(Mix.env()),
 
       # Docs
-      name: "Zhop.Cart",
+      name: "Zhop.Carts",
       docs: [
-        main: "Zhop.Cart",
+        main: "Zhop.Carts",
         extras: ["README.md"]
       ]
     ]
@@ -25,8 +26,8 @@ defmodule Zhop.Cart.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger, :gproc],
-      mod: {Zhop.Cart.Application, []}
+      extra_applications: [:logger, :gproc, :catalog],
+      mod: {Zhop.Carts.Application, []}
     ]
   end
 
@@ -40,7 +41,11 @@ defmodule Zhop.Cart.MixProject do
       {:mix_test_watch, "~> 0.5", only: :dev, runtime: false},
       {:quixir, "~> 0.9", only: :test},
       {:mox, "~> 0.3", only: :test},
-      {:money, "~> 1.2"}
+      {:money, "~> 1.2"},
+      {:uuid, "~> 1.1"}
     ]
   end
+
+  def elixirc_paths(:test), do: ["test/support", "lib"]
+  def elixirc_paths(_), do: ["lib"]
 end
