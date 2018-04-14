@@ -46,11 +46,10 @@ defmodule Zhop.Carts.Cart do
       {:ok, %Zhop.Carts.Cart{id: "abcd", contents: %{"ITEM" => 5}}}
 
   """
-  @spec add(cart :: Cart.t(), id :: String.t(), quantity :: integer) ::
-          {:ok, Cart.t()} | {:error, reason :: term}
+  @spec add(cart :: Cart.t(), id :: String.t(), quantity :: integer) :: {:ok, Cart.t()} | {:error, reason :: term}
   def add(cart, id, quantity \\ 1)
 
-  def add(cart = %Cart{}, id, quantity) do
+  def add(%Cart{} = cart, id, quantity) do
     with {:ok, id} <- validate_item_id(id),
          {:ok, quantity} <- validate_quantity(quantity) do
       {:ok, %Cart{cart | contents: Map.update(cart.contents, id, quantity, &(&1 + quantity))}}
@@ -87,11 +86,10 @@ defmodule Zhop.Carts.Cart do
       {:ok, %Zhop.Carts.Cart{id: "abcd", contents: %{}}}
 
   """
-  @spec remove(cart :: Cart.t(), id :: String.t(), quantity :: integer) ::
-          {:ok, Cart.t()} | {:error, reason :: term}
+  @spec remove(cart :: Cart.t(), id :: String.t(), quantity :: integer) :: {:ok, Cart.t()} | {:error, reason :: term}
   def remove(cart, id, quantity \\ 1)
 
-  def remove(cart = %Cart{}, id, quantity) do
+  def remove(%Cart{} = cart, id, quantity) do
     with {:ok, id} <- validate_item_id(id),
          {:ok, quantity} <- validate_quantity(quantity) do
       current_quantity = Map.get(cart.contents, id)
@@ -134,7 +132,7 @@ defmodule Zhop.Carts.Cart do
 
   """
   @spec count(cart :: Cart.t(), id :: String.t()) :: integer
-  def count(cart = %Cart{}, id) do
+  def count(%Cart{} = cart, id) do
     Map.get(cart.contents, id, 0)
   end
 
@@ -159,7 +157,7 @@ defmodule Zhop.Carts.Cart do
 
   """
   @spec has(cart :: Cart.t(), id :: String.t()) :: boolean
-  def has(cart = %Cart{}, id) do
+  def has(%Cart{} = cart, id) do
     Map.get(cart.contents, id, 0) !== 0
   end
 
@@ -175,8 +173,7 @@ defmodule Zhop.Carts.Cart do
 
   defp validate_item_id(_), do: {:error, :invalid_item_id}
 
-  defp validate_quantity(quantity) when is_integer(quantity) and quantity >= 0,
-    do: {:ok, quantity}
+  defp validate_quantity(quantity) when is_integer(quantity) and quantity >= 0, do: {:ok, quantity}
 
   defp validate_quantity(_), do: {:error, :invalid_quantity}
 end

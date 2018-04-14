@@ -17,8 +17,7 @@ defmodule Zhop.Catalog.ItemTest do
   end
 
   test "it allows hyphens and underscores in item ids" do
-    assert {:ok,
-            %Item{id: "__T-E-S-T__", name: "My test", type: :product, price: Money.new(12_00)}} ==
+    assert {:ok, %Item{id: "__T-E-S-T__", name: "My test", type: :product, price: Money.new(12_00)}} ==
              Item.new("__T-E-S-T__", "My test", :product, Money.new(12_00))
   end
 
@@ -45,8 +44,7 @@ defmodule Zhop.Catalog.ItemTest do
 
   test "it does not allow values equal or below zero for product prices" do
     ptest amount: int(max: 0) do
-      assert {:error, :invalid_item_price} ==
-               Item.new("TEST", "My test", :product, Money.new(amount))
+      assert {:error, :invalid_item_price} == Item.new("TEST", "My test", :product, Money.new(amount))
     end
   end
 
@@ -59,8 +57,7 @@ defmodule Zhop.Catalog.ItemTest do
 
   test "it does not allow values equal or greater than zero for discounts" do
     ptest amount: int(min: 0) do
-      assert {:error, :invalid_item_price} ==
-               Item.new("TEST", "My test", :discount, Money.new(amount))
+      assert {:error, :invalid_item_price} == Item.new("TEST", "My test", :discount, Money.new(amount))
     end
   end
 

@@ -93,8 +93,7 @@ defmodule Zhop.Catalog.Item do
       {:error, :invalid_item_price}
 
   """
-  @spec update_price(item :: Item.t(), updated_price :: Money.t()) ::
-          Item.t() | {:error, :invalid_item_price}
+  @spec update_price(item :: Item.t(), updated_price :: Money.t()) :: Item.t() | {:error, :invalid_item_price}
   def update_price(%Item{} = item, %Money{} = updated_price) do
     with {:ok, price} <- validate_price(updated_price, item.type) do
       {:ok, %Item{item | price: price}}
@@ -123,8 +122,7 @@ defmodule Zhop.Catalog.Item do
       {:error, :invalid_item_name}
 
   """
-  @spec update_name(item :: Item.t(), updated_name :: String.t()) ::
-          Item.t() | {:error, :invalid_item_name}
+  @spec update_name(item :: Item.t(), updated_name :: String.t()) :: Item.t() | {:error, :invalid_item_name}
   def update_name(%Item{} = item, updated_name) when is_binary(updated_name) do
     with {:ok, name} <- validate_name(updated_name, item.type) do
       {:ok, %Item{item | name: name}}

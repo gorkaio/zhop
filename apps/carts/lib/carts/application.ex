@@ -1,5 +1,6 @@
 defmodule Zhop.Carts.Application do
   @moduledoc false
+  alias Zhop.Carts.CartsSupervisor
 
   @repository Application.get_env(:carts, :repository)
 
@@ -7,7 +8,8 @@ defmodule Zhop.Carts.Application do
 
   def start(_type, _args) do
     children = [
-      @repository
+      @repository,
+      CartsSupervisor
     ]
 
     opts = [strategy: :one_for_one, name: Zhop.Carts.Supervisor]

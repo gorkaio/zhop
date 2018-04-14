@@ -6,7 +6,7 @@ defmodule Zhop.Carts do
 
   This should be the only module used by other applications, and defines its contract via behaviour.
   """
-  alias Zhop.Carts.{Cart, Repository}
+  alias Zhop.Carts.{CartActor, CartsSupervisor}
 
   @catalog Application.get_env(:carts, :catalog)
 
@@ -15,10 +15,8 @@ defmodule Zhop.Carts do
   @callback create() :: {:ok, id :: String.t()} | {:error, reason :: term}
   @callback contents(id :: String.t()) :: {:ok, %{}} | {:error, reason :: term}
   @callback price(id :: String.t()) :: {:ok, amount :: Money.t()} | {:error, reason :: term}
-  @callback add(id :: String.t(), item :: String.t(), quantity :: integer) ::
-              :ok | {:error, reason :: term}
-  @callback remove(id :: String.t(), item :: String.t(), quantity :: integer) ::
-              :ok | {:error, reason :: term}
+  @callback add(id :: String.t(), item :: String.t(), quantity :: integer) :: :ok | {:error, reason :: term}
+  @callback remove(id :: String.t(), item :: String.t(), quantity :: integer) :: :ok | {:error, reason :: term}
 
   @doc """
   Creates a new cart and assigns it an ID for future reference
@@ -27,8 +25,7 @@ defmodule Zhop.Carts do
   def create do
     id = UUID.uuid4()
 
-    with {:ok, cart} <- Cart.new(id),
-         :ok <- Repository.save(cart) do
+    with {:ok, _pid} <- CartsSupervisor.new(id) do
       {:ok, id}
     else
       error -> error
@@ -45,10 +42,10 @@ defmodule Zhop.Carts do
   """
   @spec contents(id :: String.t()) :: {:ok, %{}} | {:error, reason :: term}
   def contents(id) do
-    with {:ok, cart} <- Repository.find(id) do
+    with {:ok, _pid} <- CartsSupervisor.start(id) do
       {
         :ok,
-        Enum.map(cart.contents, fn {item, quantity} ->
+        Enum.map(CartActor.state(id).contents, fn {item, quantity} ->
           with {:ok, name} <- @catalog.name(item),
                {:ok, price} <- @catalog.price(item) do
             %{
@@ -100,12 +97,10 @@ defmodule Zhop.Carts do
     - quantity: Numbers of items to add
 
   """
-  @spec add(id :: String.t(), item :: String.t(), quantity :: integer) ::
-          :ok | {:error, reason :: term}
+  @spec add(id :: String.t(), item :: String.t(), quantity :: integer) :: :ok | {:error, reason :: term}
   def add(id, item, quantity \\ 1) do
-    with {:ok, cart} <- Repository.find(id),
-         {:ok, cart} <- Cart.add(cart, item, quantity) do
-      Repository.save(cart)
+    with {:ok, _pid} <- CartsSupervisor.start(id) do
+      CartActor.add(id, item, quantity)
     else
       error -> error
     end
@@ -121,12 +116,10 @@ defmodule Zhop.Carts do
     - quantity: Number of items to remove
 
   """
-  @spec remove(id :: String.t(), item :: String.t(), quantity :: integer) ::
-          :ok | {:error, reason :: term}
+  @spec remove(id :: String.t(), item :: String.t(), quantity :: integer) :: :ok | {:error, reason :: term}
   def remove(id, item, quantity \\ 1) do
-    with {:ok, cart} <- Repository.find(id),
-         {:ok, cart} <- Cart.remove(cart, item, quantity) do
-      Repository.save(cart)
+    with {:ok, _pid} <- CartsSupervisor.start(id) do
+      CartActor.remove(id, item, quantity)
     else
       error -> error
     end

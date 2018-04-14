@@ -1,4 +1,3 @@
 use Mix.Config
 
-config :carts,
-  catalog: Zhop.Catalog.Mock
+config :carts, catalog: Zhop.Catalog.Mock
