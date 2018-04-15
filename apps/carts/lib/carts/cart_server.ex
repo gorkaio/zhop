@@ -1,4 +1,4 @@
-defmodule Zhop.Carts.CartActor do
+defmodule Zhop.Carts.CartServer do
   @moduledoc """
   Cart Actor
   """
@@ -21,7 +21,7 @@ defmodule Zhop.Carts.CartActor do
   def new(id) do
     with {:pid, {:error, :not_found}} <- {:pid, pid(id)},
          {:repo, {:error, :not_found}} <- {:repo, Repository.find(id)},
-         {:ok, cart} <- Cart.new(id),
+         cart <- Cart.new(id),
          :ok <- Repository.save(cart) do
       GenServer.start_link(__MODULE__, cart, name: via_tuple(id))
     end

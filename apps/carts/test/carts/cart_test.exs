@@ -5,7 +5,7 @@ defmodule Zhop.Carts.CartTest do
   @uuid "757b3d55-13b0-4cb2-90be-448e67e4532b"
 
   test "determines if cart has an item" do
-    {:ok, cart} = Cart.new(@uuid)
+    cart = Cart.new(@uuid)
     assert Cart.has(cart, "ITEM") == false
     {:ok, cart} = Cart.add(cart, "ITEM")
     assert Cart.has(cart, "ITEM") == true
@@ -14,28 +14,28 @@ defmodule Zhop.Carts.CartTest do
   end
 
   test "counts items in cart" do
-    {:ok, cart} = Cart.new(@uuid)
+    cart = Cart.new(@uuid)
     assert Cart.count(cart, "ITEM") == 0
     {:ok, cart} = Cart.add(cart, "ITEM", 3)
     assert Cart.count(cart, "ITEM") == 3
   end
 
   test "adds new items to cart defaulting to one unit" do
-    {:ok, cart} = Cart.new(@uuid)
+    cart = Cart.new(@uuid)
     assert Cart.has(cart, "ITEM") == false
     {:ok, cart} = Cart.add(cart, "ITEM")
     assert Cart.count(cart, "ITEM") == 1
   end
 
   test "adds new items to cart allowing to specify quantity" do
-    {:ok, cart} = Cart.new(@uuid)
+    cart = Cart.new(@uuid)
     assert Cart.has(cart, "ITEM") == false
     {:ok, cart} = Cart.add(cart, "ITEM", 13)
     assert Cart.count(cart, "ITEM") == 13
   end
 
   test "decreases item units from cart when removing less than existing" do
-    {:ok, cart} = Cart.new(@uuid)
+    cart = Cart.new(@uuid)
     assert Cart.has(cart, "ITEM") == false
     {:ok, cart} = Cart.add(cart, "ITEM", 13)
     {:ok, cart} = Cart.remove(cart, "ITEM", 3)
@@ -43,7 +43,7 @@ defmodule Zhop.Carts.CartTest do
   end
 
   test "removes existing items from cart when removing all existing units" do
-    {:ok, cart} = Cart.new(@uuid)
+    cart = Cart.new(@uuid)
     assert Cart.has(cart, "ITEM") == false
     {:ok, cart} = Cart.add(cart, "ITEM", 13)
     {:ok, cart} = Cart.remove(cart, "ITEM", 13)
@@ -51,7 +51,7 @@ defmodule Zhop.Carts.CartTest do
   end
 
   test "removes existing items from cart when removing more than existing" do
-    {:ok, cart} = Cart.new(@uuid)
+    cart = Cart.new(@uuid)
     assert Cart.has(cart, "ITEM") == false
     {:ok, cart} = Cart.add(cart, "ITEM", 13)
     {:ok, cart} = Cart.remove(cart, "ITEM", 15)

@@ -21,7 +21,7 @@ defmodule Zhop.Carts.Repository.Memory do
   def init(_args) do
     {
       :ok,
-      Map.new(initial_data(), fn %{cart: {:ok, cart}, contents: contents} ->
+      Map.new(initial_data(), fn %{cart: cart, contents: contents} ->
         {
           cart.id,
           build_cart(cart, contents)
@@ -57,7 +57,7 @@ defmodule Zhop.Carts.Repository.Memory do
 
   ## Examples
 
-      iex> {:ok, cart} = Zhop.Carts.Cart.new("CART")
+      iex> cart = Zhop.Carts.Cart.new("CART")
       ...> Zhop.Carts.Repository.Memory.save(cart)
       ...> Zhop.Carts.Repository.Memory.find("CART")
       {:ok, %Zhop.Carts.Cart{id: "CART", contents: %{}}}
@@ -80,7 +80,7 @@ defmodule Zhop.Carts.Repository.Memory do
 
   ## Examples
 
-      iex> {:ok, cart} = Zhop.Carts.Cart.new("CART")
+      iex> cart = Zhop.Carts.Cart.new("CART")
       ...> Zhop.Carts.Repository.Memory.save(cart)
       :ok
 

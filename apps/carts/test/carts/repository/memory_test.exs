@@ -4,7 +4,7 @@ defmodule Zhop.Carts.Repository.MemoryTest do
   doctest Memory
 
   test "it finds existing carts" do
-    {:ok, cart} = Cart.new("TEST")
+    cart = Cart.new("TEST")
     :ok = Memory.save(cart)
     assert {:ok, cart} == Memory.find("TEST")
   end
@@ -14,7 +14,7 @@ defmodule Zhop.Carts.Repository.MemoryTest do
   end
 
   test "it updates existing carts" do
-    {:ok, cart} = Cart.new("TEST")
+    cart = Cart.new("TEST")
     :ok = Memory.save(cart)
     {:ok, cart} = Cart.add(cart, "T-SHIRT", 3)
     :ok = Memory.save(cart)

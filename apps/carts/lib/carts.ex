@@ -6,7 +6,7 @@ defmodule Zhop.Carts do
 
   This should be the only module used by other applications, and defines its contract via behaviour.
   """
-  alias Zhop.Carts.{CartActor, CartsSupervisor}
+  alias Zhop.Carts.{CartServer, CartsSupervisor}
 
   @catalog Application.get_env(:carts, :catalog)
 
@@ -45,7 +45,7 @@ defmodule Zhop.Carts do
     with {:ok, _pid} <- CartsSupervisor.start(id) do
       {
         :ok,
-        Enum.map(CartActor.state(id).contents, fn {item, quantity} ->
+        Enum.map(CartServer.state(id).contents, fn {item, quantity} ->
           with {:ok, name} <- @catalog.name(item),
                {:ok, price} <- @catalog.price(item) do
             %{
@@ -100,7 +100,7 @@ defmodule Zhop.Carts do
   @spec add(id :: String.t(), item :: String.t(), quantity :: integer) :: :ok | {:error, reason :: term}
   def add(id, item, quantity \\ 1) do
     with {:ok, _pid} <- CartsSupervisor.start(id) do
-      CartActor.add(id, item, quantity)
+      CartServer.add(id, item, quantity)
     else
       error -> error
     end
@@ -119,7 +119,7 @@ defmodule Zhop.Carts do
   @spec remove(id :: String.t(), item :: String.t(), quantity :: integer) :: :ok | {:error, reason :: term}
   def remove(id, item, quantity \\ 1) do
     with {:ok, _pid} <- CartsSupervisor.start(id) do
-      CartActor.remove(id, item, quantity)
+      CartServer.remove(id, item, quantity)
     else
       error -> error
     end

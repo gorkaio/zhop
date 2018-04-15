@@ -18,12 +18,12 @@ defmodule Zhop.Carts.Cart do
   # Examples
 
       iex> Zhop.Carts.Cart.new("abcd")
-      {:ok, %Zhop.Carts.Cart{id: "abcd", contents: %{}}}
+      %Zhop.Carts.Cart{id: "abcd", contents: %{}}
 
   """
-  @spec new(id :: String.t()) :: {:ok, Cart.t()} | {:error, reason :: term}
+  @spec new(id :: String.t()) :: Cart.t()
   def new(id) when is_binary(id) do
-    {:ok, %Cart{id: id, contents: Map.new()}}
+    %Cart{id: id, contents: Map.new()}
   end
 
   @doc """
@@ -37,11 +37,11 @@ defmodule Zhop.Carts.Cart do
 
   # Examples
 
-      iex> {:ok, cart} = Zhop.Carts.Cart.new("abcd")
+      iex> cart = Zhop.Carts.Cart.new("abcd")
       ...> Zhop.Carts.Cart.add(cart, "ITEM")
       {:ok, %Zhop.Carts.Cart{id: "abcd", contents: %{"ITEM" => 1}}}
 
-      iex> {:ok, cart} = Zhop.Carts.Cart.new("abcd")
+      iex> cart = Zhop.Carts.Cart.new("abcd")
       ...> Zhop.Carts.Cart.add(cart, "ITEM", 5)
       {:ok, %Zhop.Carts.Cart{id: "abcd", contents: %{"ITEM" => 5}}}
 
@@ -71,16 +71,16 @@ defmodule Zhop.Carts.Cart do
 
   # Examples
 
-      iex> {:ok, cart} = Zhop.Carts.Cart.new("abcd")
+      iex> cart = Zhop.Carts.Cart.new("abcd")
       ...> Zhop.Carts.Cart.remove(cart, "ITEM")
       {:ok, %Zhop.Carts.Cart{id: "abcd", contents: %{}}}
 
-      iex> {:ok, cart} = Zhop.Carts.Cart.new("abcd")
+      iex> cart = Zhop.Carts.Cart.new("abcd")
       ...> {:ok, cart} = Zhop.Carts.Cart.add(cart, "ITEM", 5)
       ...> Zhop.Carts.Cart.remove(cart, "ITEM", 2)
       {:ok, %Zhop.Carts.Cart{id: "abcd", contents: %{"ITEM" => 3}}}
 
-      iex> {:ok, cart} = Zhop.Carts.Cart.new("abcd")
+      iex> cart = Zhop.Carts.Cart.new("abcd")
       ...> {:ok, cart} = Zhop.Carts.Cart.add(cart, "ITEM", 5)
       ...> Zhop.Carts.Cart.remove(cart, "ITEM", 21)
       {:ok, %Zhop.Carts.Cart{id: "abcd", contents: %{}}}
@@ -121,11 +121,11 @@ defmodule Zhop.Carts.Cart do
 
   # Examples
 
-      iex> {:ok, cart} = Zhop.Carts.Cart.new("abcd")
+      iex> cart = Zhop.Carts.Cart.new("abcd")
       ...> Zhop.Carts.Cart.count(cart, "ITEM")
       0
 
-      iex> {:ok, cart} = Zhop.Carts.Cart.new("abcd")
+      iex> cart = Zhop.Carts.Cart.new("abcd")
       ...> {:ok, cart} = Zhop.Carts.Cart.add(cart, "ITEM", 5)
       ...> Zhop.Carts.Cart.count(cart, "ITEM")
       5
@@ -146,11 +146,11 @@ defmodule Zhop.Carts.Cart do
 
   # Examples
 
-      iex> {:ok, cart} = Zhop.Carts.Cart.new("abcd")
+      iex> cart = Zhop.Carts.Cart.new("abcd")
       ...> Zhop.Carts.Cart.has(cart, "ITEM")
       false
 
-      iex> {:ok, cart} = Zhop.Carts.Cart.new("abcd")
+      iex> cart = Zhop.Carts.Cart.new("abcd")
       ...> {:ok, cart} = Zhop.Carts.Cart.add(cart, "ITEM", 5)
       ...> Zhop.Carts.Cart.has(cart, "ITEM")
       true

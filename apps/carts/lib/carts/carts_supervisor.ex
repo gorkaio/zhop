@@ -3,7 +3,7 @@ defmodule Zhop.Carts.CartsSupervisor do
   Cart actors supervisor
   """
   use DynamicSupervisor
-  alias Zhop.Carts.CartActor
+  alias Zhop.Carts.CartServer
 
   @max_carts 2000
 
@@ -21,22 +21,22 @@ defmodule Zhop.Carts.CartsSupervisor do
 
   def new(cart_id) do
     DynamicSupervisor.start_child(via_tuple(), %{
-      id: CartActor,
+      id: CartServer,
       restart: :transient,
-      start: {CartActor, :new, [cart_id]}
+      start: {CartServer, :new, [cart_id]}
     })
   end
 
   def start(cart_id) do
     DynamicSupervisor.start_child(via_tuple(), %{
-      id: CartActor,
+      id: CartServer,
       restart: :transient,
-      start: {CartActor, :start, [cart_id]}
+      start: {CartServer, :start, [cart_id]}
     })
   end
 
   def remove(cart_id) do
-    with {:ok, pid} <- CartActor.pid(cart_id) do
+    with {:ok, pid} <- CartServer.pid(cart_id) do
       DynamicSupervisor.terminate_child(via_tuple(), pid)
     end
   end
